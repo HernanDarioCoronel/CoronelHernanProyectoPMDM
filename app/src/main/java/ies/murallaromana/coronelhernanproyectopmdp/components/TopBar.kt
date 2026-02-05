@@ -43,7 +43,7 @@ import org.w3c.dom.Text
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar() {
+fun TopBar(debugGoBackToLogin:()->Unit) {
     TopAppBar(
         title = { Text("MoviePass") },
         colors = TopAppBarColors(
@@ -73,7 +73,7 @@ fun TopBar() {
         },
         actions = {
             IconButton(
-                onClick = { },
+                onClick = { debugGoBackToLogin() },
                 modifier = Modifier
                     .background(
                         color = MaterialTheme.colorScheme.primary,

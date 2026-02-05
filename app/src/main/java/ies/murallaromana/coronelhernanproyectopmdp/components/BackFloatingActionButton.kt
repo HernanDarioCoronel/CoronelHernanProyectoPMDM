@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 @Composable
 fun BackFloatingActionButton(onBack: () -> Unit) {
     FloatingActionButton(
-        onClick = onBack
+        onClick = onBack,
     ) {
         Icon(
             imageVector = Icons.AutoMirrored.Filled.ArrowBack,

@@ -12,48 +12,53 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import ies.murallaromana.coronelhernanproyectopmdp.components.BackFloatingActionButton
 import ies.murallaromana.coronelhernanproyectopmdp.components.TopBar
 import ies.murallaromana.coronelhernanproyectopmdp.screens.Login
 import ies.murallaromana.coronelhernanproyectopmdp.screens.MovieDetails
 import ies.murallaromana.coronelhernanproyectopmdp.screens.MovieList
 import ies.murallaromana.coronelhernanproyectopmdp.screens.Register
 import ies.murallaromana.coronelhernanproyectopmdp.screens.ui.theme.AppTheme
+import kotlinx.coroutines.flow.count
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val navController = rememberNavController()
+
+            val canPop = navController.previousBackStackEntry != null
+
             AppTheme {
                 Scaffold(
+                    floatingActionButton = {
+                        if (canPop)
+                            BackFloatingActionButton({ navController.popBackStack() })
+
+                    },
                     modifier = Modifier.fillMaxSize(),
-                    topBar = { TopBar() }
+                    topBar = {
+                        TopBar(debugGoBackToLogin = {
+                            navController.navigate("login") {
+                                popUpTo("movieList") { inclusive = true }
+                            }
+                        })
+                    }
                 ) { innerPadding ->
-                    AppNavigation(modifier = Modifier.padding(innerPadding))
+                    AppNavigation(modifier = Modifier.padding(innerPadding), navController)
                 }
             }
         }
     }
 }
-@Preview
-@Composable
-fun Preview(){
-    MaterialTheme() {
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            topBar = { TopBar() }
-        ) { innerPadding ->
-            AppNavigation(modifier = Modifier.padding(innerPadding))
-        }
-    }
-}
 
 @Composable
-fun AppNavigation(modifier: Modifier) {
-    val navController = rememberNavController()
+fun AppNavigation(modifier: Modifier, navController: NavHostController) {
     val context = LocalContext.current
     NavHost(navController = navController, startDestination = "login") {
         composable("login") {
@@ -77,7 +82,6 @@ fun AppNavigation(modifier: Modifier) {
                         popUpTo("register") { inclusive = true }
                     }
                 },
-                onBackToLogin = { navController.popBackStack() }
             )
         }
         composable("movieList") {
