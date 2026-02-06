@@ -8,12 +8,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 
 @Composable
-fun AddFloatingActionButton(onNavigateToAddMovie:()->Unit){
-    FloatingActionButton (
+fun AddFloatingActionButton(onNavigateToAddMovie: () -> Unit) {
+    FloatingActionButton(
         onClick = {}
     ) {
         Icon(
-            ImageVector = Icons.Filled.Add,
+            imageVector = Icons.Filled.Add,
             contentDescription = "Agregar Pelicula"
         )
     }
