@@ -16,3 +16,8 @@ fun loadMoviesFromAssets(context: Context, file: String): List<Movie> {
         return emptyList()
     }
 }
+
+fun getMovieByIdFromAssets(context: Context, file: String, id: Int): Movie? {
+    val allMovies = loadMoviesFromAssets(context, file)
+    return allMovies.find { it.id == id }
+}

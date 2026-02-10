@@ -12,22 +12,32 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import ies.murallaromana.coronelhernanproyectopmdp.components.MovieItem
 import ies.murallaromana.coronelhernanproyectopmdp.dataAccess.loadMoviesFromAssets
 import ies.murallaromana.coronelhernanproyectopmdp.entities.Movie
 
 @Composable
-fun MovieList(onNavigateToMovieDetails: (movieId: Int) -> Unit, modifier: Modifier, context: Context) {
-
+fun MovieList(
+    onNavigateToMovieDetails: (movieId: Int) -> Unit,
+    modifier: Modifier,
+    context: Context,
+    file: String
+) {
     var movies by remember { mutableStateOf(emptyList<Movie>()) }
-
-    LaunchedEffect(Unit) {
-        movies = loadMoviesFromAssets(context, "movies.json")
-    }
-    Text("Movie list")
-    LazyColumn {
-        items(movies) { movie ->
-            Text(text = movie.title)
+    Column(modifier = modifier) {
+        LaunchedEffect(Unit) {
+            movies = loadMoviesFromAssets(context, file)
         }
+        Text("Movie list")
+        if (movies.isEmpty()) {
+            Text("Loading movies or file not found...")
+        } else {
+            LazyColumn {
+                items(movies) { movie ->
+                    MovieItem(movie, onNavigateToMovieDetails)
+                }
+            }
+        }
+
     }
 }
