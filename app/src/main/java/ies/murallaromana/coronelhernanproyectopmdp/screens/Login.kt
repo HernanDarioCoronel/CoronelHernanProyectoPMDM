@@ -1,5 +1,6 @@
 package ies.murallaromana.coronelhernanproyectopmdp.screens
 
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,8 +15,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonColors
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -37,105 +36,111 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.rememberNavController
 import ies.murallaromana.coronelhernanproyectopmdp.components.LogoHeader
-
-
-private val correctUser = "a@b.com"
-private val correctPassw = "1234"
+import ies.murallaromana.coronelhernanproyectopmdp.sharedPreferences.UserPreferences
 
 @Composable
-fun Login(onNavigateToMovieList: () -> Unit, onNavigateToRegister: () -> Unit, modifier: Modifier) {
+fun Login(
+    onNavigateToMovieList: () -> Unit,
+    onNavigateToRegister: () -> Unit,
+    modifier: Modifier,
+    context: Context
+) {
+    val prefs = remember { UserPreferences(context) }
+
+    var usuario by remember { mutableStateOf(prefs.getUser()) }
+    var passw by remember { mutableStateOf(prefs.getPass()) }
+
+    val isEmailError = usuario.isNotEmpty() && !isEmailValid(usuario)
+    val isPasswordError = passw.isNotEmpty() && !isPasswValid(passw)
+    var showPassword by remember { mutableStateOf(false) }
+
     Column(modifier) {
-        Surface() {
-            Column() {
+        Surface {
+            Column {
                 LogoHeader(
                     Modifier
                         .fillMaxWidth()
                         .padding(20.dp)
                 )
-                LoginBody(onNavigateToMovieList, onNavigateToRegister)
+
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+
+                    ) {
+                    OutlinedTextField(
+                        value = usuario,
+                        onValueChange = { usuario = it },
+                        label = { Text("Email") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                        isError = isEmailError,
+                        supportingText = {
+                            if (isEmailError) {
+                                Text(
+                                    text = "Formato de correo inválido",
+                                    color = MaterialTheme.colorScheme.error
+                                )
+                            }
+                        },
+                        trailingIcon = {
+                            if (isEmailError) {
+                                Icon(
+                                    Icons.Filled.Info,
+                                    "Error",
+                                    tint = MaterialTheme.colorScheme.error
+                                )
+                            }
+                        },
+                        singleLine = true,
+                    )
+
+                    OutlinedTextField(
+                        value = passw,
+                        onValueChange = { passw = it },
+                        label = { Text("Contraseña") },
+                        isError = isPasswordError,
+                        supportingText = {
+                            if (isPasswordError) {
+                                Text(
+                                    text = "La contraseña debe tener entre 4 y 16 caracteres.",
+                                    color = MaterialTheme.colorScheme.error
+                                )
+                            }
+                        },
+                        visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                        trailingIcon = {
+                            IconButton(onClick = { showPassword = !showPassword }) {
+                                Icon(
+                                    imageVector = if (showPassword) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                                    contentDescription = if (showPassword) "Ocultar" else "Mostrar",
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                        }
+                    )
+                    Button(
+                        onClick = {
+                            if (!isEmailError && !isPasswordError && usuario.isNotEmpty() && passw.isNotEmpty()) {
+                                prefs.saveData(usuario, passw)
+                                onNavigateToMovieList()
+                            }
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            contentColor = MaterialTheme.colorScheme.primary,
+                            disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                            disabledContentColor = MaterialTheme.colorScheme.secondary
+                        )
+                    ) {
+                        Text("Login")
+                    }
+                    RegisterLink(onNavigateToRegister)
+                }
             }
         }
-    }
-}
-
-@Composable
-fun LoginBody(onNavigateToMovieList: () -> Unit, onNavigateToRegister: () -> Unit) {
-    var usuario by remember { mutableStateOf("") }
-    var passw by remember { mutableStateOf("") }
-
-    val isEmailError = usuario.isNotEmpty() && !isEmailValid(usuario)
-    var showPassword by remember { mutableStateOf(false) }
-
-    var errorMsg by remember { mutableStateOf("") }
-
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-
-        ) {
-        OutlinedTextField(
-            value = usuario,
-            onValueChange = { usuario = it },
-            label = { Text("Email") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-            isError = isEmailError,
-            supportingText = {
-                if (isEmailError) {
-                    Text(
-                        text = "Formato de correo inválido",
-                        color = MaterialTheme.colorScheme.error
-                    )
-                }
-            },
-            trailingIcon = {
-                if (isEmailError) {
-                    Icon(Icons.Filled.Info, "Error", tint = MaterialTheme.colorScheme.error)
-                }
-            },
-            singleLine = true,
-        )
-
-        OutlinedTextField(
-            value = passw,
-            onValueChange = { passw = it },
-            label = { Text("Contraseña") },
-            visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            trailingIcon = {
-                IconButton(onClick = { showPassword = !showPassword }) {
-                    Icon(
-                        imageVector = if (showPassword) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
-                        contentDescription = if (showPassword) "Ocultar" else "Mostrar",
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                }
-            }
-        )
-        Text(
-            text = errorMsg,
-            color = MaterialTheme.colorScheme.error
-        )
-        Button(
-            onClick = {
-                if (loginError(usuario, passw)) {
-                    errorMsg = "Usuario o contraseña incorrectos"
-                } else {
-                    onNavigateToMovieList()
-                }
-            },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                contentColor = MaterialTheme.colorScheme.primary,
-                disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer,
-                disabledContentColor = MaterialTheme.colorScheme.secondary
-            )
-        ) {
-            Text("Login")
-        }
-        RegisterLink(onNavigateToRegister)
     }
 }
 
@@ -144,13 +149,12 @@ fun isEmailValid(email: String): Boolean {
     return email.matches(emailRegex)
 }
 
-fun loginError(user: String, passw: String): Boolean {
-    return user != correctUser || passw != correctPassw
+fun isPasswValid(pass: String): Boolean {
+    return (pass.length in 4..16)
 }
 
 @Composable
 fun RegisterLink(onNavigateToRegister: () -> Unit) {
-    val navController = rememberNavController()
     val annotatedString = buildAnnotatedString {
         append("No tienes cuenta?. ")
 

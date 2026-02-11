@@ -25,9 +25,9 @@ import ies.murallaromana.coronelhernanproyectopmdp.entities.Movie
 
 
 @Composable
-fun MovieItem(movie: Movie, onNavigateToMovieDetails: (movieId: Int) -> Unit) {
+fun MovieItem(movie: Movie, onNavigateToMovie: (movieId: Int) -> Unit) {
     Card(
-        onClick = { onNavigateToMovieDetails(movie.id) },
+        onClick = { onNavigateToMovie(movie.id) },
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp, vertical = 4.dp),

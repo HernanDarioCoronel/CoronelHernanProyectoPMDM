@@ -18,7 +18,7 @@ import ies.murallaromana.coronelhernanproyectopmdp.entities.Movie
 
 @Composable
 fun MovieList(
-    onNavigateToMovieDetails: (movieId: Int) -> Unit,
+    onNavigateToMovie: (movieId: Int) -> Unit,
     modifier: Modifier,
     context: Context,
     file: String
@@ -28,13 +28,12 @@ fun MovieList(
         LaunchedEffect(Unit) {
             movies = loadMoviesFromAssets(context, file)
         }
-        Text("Movie list")
         if (movies.isEmpty()) {
             Text("Loading movies or file not found...")
         } else {
             LazyColumn {
                 items(movies) { movie ->
-                    MovieItem(movie, onNavigateToMovieDetails)
+                    MovieItem(movie, onNavigateToMovie)
                 }
             }
         }

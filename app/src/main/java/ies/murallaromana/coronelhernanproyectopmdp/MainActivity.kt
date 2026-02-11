@@ -12,7 +12,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import ies.murallaromana.coronelhernanproyectopmdp.components.AddFloatingActionButton
 import ies.murallaromana.coronelhernanproyectopmdp.components.AppNavigation
 import ies.murallaromana.coronelhernanproyectopmdp.components.BackFloatingActionButton
 import ies.murallaromana.coronelhernanproyectopmdp.components.TopBar
@@ -25,13 +27,21 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             var currentSubtitle by remember { mutableStateOf("Login") }
-            val canPop = navController.previousBackStackEntry != null
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
 
             AppTheme {
                 Scaffold(
                     floatingActionButton = {
+                        val currentRoute = navBackStackEntry?.destination?.route
+                        val canPop = navController.previousBackStackEntry != null
                         if (canPop)
                             BackFloatingActionButton({ navController.popBackStack() })
+                        if(currentRoute == "movieList")
+                            AddFloatingActionButton(
+                                onNavigateToAddMovie = {
+                                    navController.navigate("movie/create")
+                                }
+                            )
 
                     },
                     modifier = Modifier.fillMaxSize(),

@@ -7,7 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import ies.murallaromana.coronelhernanproyectopmdp.screens.Login
-import ies.murallaromana.coronelhernanproyectopmdp.screens.MovieDetails
+import ies.murallaromana.coronelhernanproyectopmdp.screens.MovieScreen
 import ies.murallaromana.coronelhernanproyectopmdp.screens.MovieList
 import ies.murallaromana.coronelhernanproyectopmdp.screens.Register
 
@@ -32,7 +32,8 @@ fun AppNavigation(
                 },
                 onNavigateToRegister = {
                     navController.navigate("register")
-                }
+                },
+                context = context
             )
         }
         composable("register") {
@@ -50,14 +51,14 @@ fun AppNavigation(
             changeSubtitle("Lista de peliculas")
             MovieList(
                 modifier = modifier,
-                onNavigateToMovieDetails = { movieId: Int ->
-                    navController.navigate("movieDetails/$movieId")
+                onNavigateToMovie = { movieId: Int ->
+                    navController.navigate("movie/$movieId")
                 },
                 context = context,
                 file = fileName
             )
         }
-        composable("movieDetails/{movieId}") { backStackEntry ->
+        composable("movie/{movieId}") { backStackEntry ->
             val movieIdString = backStackEntry.arguments?.getString("movieId")
 
             val movieId = movieIdString?.toIntOrNull() ?: 0
@@ -66,7 +67,7 @@ fun AppNavigation(
                 navController.popBackStack()
             } else {
                 changeSubtitle("Detalles")
-                MovieDetails(
+                MovieScreen(
                     modifier = modifier,
                     context = context,
                     movieId = movieId,

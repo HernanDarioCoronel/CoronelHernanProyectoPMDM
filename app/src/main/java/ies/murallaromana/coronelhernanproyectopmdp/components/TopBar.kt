@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import ies.murallaromana.coronelhernanproyectopmdp.R
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -25,6 +26,7 @@ fun TopBar(debugGoBackToLogin: () -> Unit, subtitle: String) {
     TopAppBar(
         title = {
             TopAppBarTitle(
+                imageTitle = R.drawable.cine_pass_title,
                 title = "MoviePass",
                 subtitle = subtitle,
             )
