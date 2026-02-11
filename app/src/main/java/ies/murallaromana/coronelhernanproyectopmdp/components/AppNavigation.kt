@@ -51,11 +51,14 @@ fun AppNavigation(
             changeSubtitle("Lista de peliculas")
             MovieList(
                 modifier = modifier,
+                context = context,
+                file = fileName,
                 onNavigateToMovie = { movieId: Int ->
                     navController.navigate("movie/$movieId")
                 },
-                context = context,
-                file = fileName
+                onNavigateToMovieEdit = { movieId: Int ->
+                    navController.navigate("movie/edit/$movieId")
+                }
             )
         }
         composable("movie/{movieId}") { backStackEntry ->
@@ -63,17 +66,27 @@ fun AppNavigation(
 
             val movieId = movieIdString?.toIntOrNull() ?: 0
 
-            if (movieId == null) {
-                navController.popBackStack()
-            } else {
-                changeSubtitle("Detalles")
-                MovieScreen(
-                    modifier = modifier,
-                    context = context,
-                    movieId = movieId,
-                    file = fileName
-                )
-            }
+            changeSubtitle("Detalles")
+            MovieScreen(
+                modifier = modifier,
+                context = context,
+                movieId = movieId,
+                file = fileName
+            )
+        }
+        composable("movie/edit/{movieId}") { backStackEntry ->
+            val movieIdString = backStackEntry.arguments?.getString("movieId")
+
+            val movieId = movieIdString?.toIntOrNull() ?: 0
+
+            changeSubtitle("Detalles")
+            MovieScreen(
+                modifier = modifier,
+                context = context,
+                movieId = movieId,
+                file = fileName,
+                isEditing = true
+            )
         }
     }
 }

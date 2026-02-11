@@ -1,19 +1,39 @@
 package ies.murallaromana.coronelhernanproyectopmdp.components
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AlertDialogDefaults
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,8 +44,15 @@ import ies.murallaromana.coronelhernanproyectopmdp.R
 import ies.murallaromana.coronelhernanproyectopmdp.entities.Movie
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MovieItem(movie: Movie, onNavigateToMovie: (movieId: Int) -> Unit) {
+fun MovieItem(
+    movie: Movie,
+    context: Context,
+    onNavigateToMovie: (movieId: Int) -> Unit,
+    onNavigateToMovieEdit: (movieId: Int) -> Unit,
+    onOpenDialog: (movieId: Int) -> Unit
+) {
     Card(
         onClick = { onNavigateToMovie(movie.id) },
         modifier = Modifier
@@ -64,6 +91,24 @@ fun MovieItem(movie: Movie, onNavigateToMovie: (movieId: Int) -> Unit) {
                     text = movie.genre,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                )
+            }
+
+            IconButton(onClick = { onNavigateToMovieEdit(movie.id) }) {
+                Icon(
+                    imageVector = Icons.Filled.Edit,
+                    contentDescription = "Editar película",
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
+
+            IconButton(onClick = {
+                onOpenDialog(movie.id)
+            }) {
+                Icon(
+                    imageVector = Icons.Filled.Delete,
+                    contentDescription = "Eliminar película",
+                    tint = MaterialTheme.colorScheme.error
                 )
             }
         }
