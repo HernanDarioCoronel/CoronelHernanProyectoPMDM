@@ -44,7 +44,6 @@ import ies.murallaromana.coronelhernanproyectopmdp.R
 import ies.murallaromana.coronelhernanproyectopmdp.entities.Movie
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovieItem(
     movie: Movie,

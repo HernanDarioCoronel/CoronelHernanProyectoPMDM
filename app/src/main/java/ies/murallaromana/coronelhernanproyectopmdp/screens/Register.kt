@@ -28,11 +28,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import ies.murallaromana.coronelhernanproyectopmdp.components.BackFloatingActionButton
 import ies.murallaromana.coronelhernanproyectopmdp.components.LogoHeader
-
-val usuarioExistente = "pepito"
-val emailRepetido = "a@b.com"
 
 @Composable
 fun Register(onNavigateToMovieList: () -> Unit, modifier: Modifier) {
@@ -57,9 +53,9 @@ fun RegisterBody(onNavigateToMovieList: () -> Unit) {
 
     var showPassword by remember { mutableStateOf(false) }
 
-    val isEmailError = usuario.isNotEmpty() && !isEmailValid(usuario) && repeatedEmail(email)
+    val isEmailError = usuario.isNotEmpty() && !isEmailValid(usuario)
     val isPasswError = passw.isNotEmpty() && !passwordError(passw, repeatedPassword)
-    val isUserError = usuario.isNotEmpty() && userExists(usuario)
+    val isUserError = usuario.isNotEmpty()
     val isPhoneError = telefono.isNotEmpty() && !isPhoneValid(telefono)
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -175,16 +171,6 @@ fun RegisterBody(onNavigateToMovieList: () -> Unit) {
         }
     }
 
-}
-
-fun repeatedEmail(email: String): Boolean {
-    // TO DO: validar contra API
-    return email == emailRepetido
-}
-
-fun userExists(user: String): Boolean {
-    // TO DO: validar contra API
-    return user == usuarioExistente
 }
 
 fun passwordError(passw: String, repeatedPassw: String): Boolean {

@@ -6,6 +6,11 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -14,9 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import ies.murallaromana.coronelhernanproyectopmdp.components.AddFloatingActionButton
 import ies.murallaromana.coronelhernanproyectopmdp.components.AppNavigation
-import ies.murallaromana.coronelhernanproyectopmdp.components.BackFloatingActionButton
 import ies.murallaromana.coronelhernanproyectopmdp.components.TopBar
 import ies.murallaromana.coronelhernanproyectopmdp.screens.ui.theme.AppTheme
 
@@ -35,13 +38,23 @@ class MainActivity : ComponentActivity() {
                         val currentRoute = navBackStackEntry?.destination?.route
                         val canPop = navController.previousBackStackEntry != null
                         if (canPop)
-                            BackFloatingActionButton({ navController.popBackStack() })
-                        if(currentRoute == "movieList")
-                            AddFloatingActionButton(
-                                onNavigateToAddMovie = {
-                                    navController.navigate("movie/create")
-                                }
-                            )
+                            FloatingActionButton(
+                                onClick = { navController.popBackStack() },
+                            ) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = "Volver atrás"
+                                )
+                            }
+                        else if (currentRoute == "movieList")
+                            FloatingActionButton(
+                                onClick = { navController.navigate("movie/add") }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Add,
+                                    contentDescription = "Agregar Pelicula"
+                                )
+                            }
 
                     },
                     modifier = Modifier.fillMaxSize(),
@@ -57,8 +70,8 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     AppNavigation(
                         modifier = Modifier.padding(innerPadding),
-                        navController =  navController,
-                        changeSubtitle = {currentSubtitle = it}
+                        navController = navController,
+                        changeSubtitle = { currentSubtitle = it }
                     )
                 }
             }

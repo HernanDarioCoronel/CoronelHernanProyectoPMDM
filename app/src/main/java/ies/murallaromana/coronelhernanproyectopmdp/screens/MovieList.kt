@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.BasicAlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -29,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import ies.murallaromana.coronelhernanproyectopmdp.components.MovieItem
 import ies.murallaromana.coronelhernanproyectopmdp.entities.Movie
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovieList(
     onNavigateToMovie: (movieId: Int) -> Unit,
@@ -38,6 +40,7 @@ fun MovieList(
     file: String
 ) {
     var movies by remember { mutableStateOf(emptyList<Movie>()) }
+    var idToDelete by remember { mutableStateOf(0) }
     var openDialog by remember { mutableStateOf(false) }
     Column(modifier = modifier) {
         LaunchedEffect(Unit) {
@@ -53,12 +56,14 @@ fun MovieList(
                         context = context,
                         onNavigateToMovie = onNavigateToMovie,
                         onNavigateToMovieEdit = onNavigateToMovieEdit,
-                        onOpenDialog = {}
+                        onOpenDialog = { movieId ->
+                            idToDelete = movieId
+                            openDialog = true
+                        }
                     )
                 }
             }
             if (openDialog) {
-                // igual esto deberia ir en el composable padre?
                 BasicAlertDialog(
                     onDismissRequest = {
                         openDialog = false
@@ -74,10 +79,20 @@ fun MovieList(
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text("Estas seguro que quieres eliminar la pelicula?")
                             Spacer(modifier = Modifier.height(24.dp))
-                            Row(modifier = Modifier.align(Alignment.End), horizontalArrangement = Arrangement.SpaceBetween) {
+                            Row(
+                                modifier = Modifier.align(Alignment.End),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
                                 TextButton(
                                     onClick = {
-                                        MovieManager.deleteMovie(id = movie.id, context = context)
+                                        if (idToDelete != 0) {
+                                            MovieManager.deleteMovie(
+                                                id = idToDelete,
+                                                context = context
+                                            )
+                                            idToDelete = 0
+                                            movies = MovieManager.loadMovies(context, file)
+                                        }
                                         openDialog = false
                                     },
                                 ) {
