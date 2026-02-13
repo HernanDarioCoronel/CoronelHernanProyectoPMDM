@@ -9,9 +9,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -56,6 +61,33 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
 
+                    },
+                    bottomBar = {
+                        /* TO DO: esto es un ejemplo de bottombar. deberia persoanlizarse*/
+                        NavigationBar {
+                            NavigationBarItem(
+                                selected = false, // Aquí deberías comparar con la ruta actual
+                                onClick = {
+                                    val currentRouteId = navController.currentBackStackEntry?.destination?.id
+                                    navController.navigate("movieList") {
+                                        popUpTo(currentRouteId?:"") { inclusive = true }
+                                    }
+                                },
+                                icon = { Icon(Icons.Default.Home, contentDescription = "Inicio") },
+                                label = { Text("Inicio") }
+                            )
+                            NavigationBarItem(
+                                selected = false,
+                                onClick = { /* Navegar a ajustes */ },
+                                icon = {
+                                    Icon(
+                                        Icons.AutoMirrored.Filled.ArrowBack,
+                                        contentDescription = "Ajustes"
+                                    )
+                                },
+                                label = { Text("Ajustes") }
+                            )
+                        }
                     },
                     modifier = Modifier.fillMaxSize(),
                     topBar = {
