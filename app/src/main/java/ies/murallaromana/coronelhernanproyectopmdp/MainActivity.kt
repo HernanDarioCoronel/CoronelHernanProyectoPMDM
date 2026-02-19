@@ -62,33 +62,6 @@ class MainActivity : ComponentActivity() {
                             }
 
                     },
-                    bottomBar = {
-                        /* TO DO: esto es un ejemplo de bottombar. deberia persoanlizarse*/
-                        NavigationBar {
-                            NavigationBarItem(
-                                selected = false, // Aquí deberías comparar con la ruta actual
-                                onClick = {
-                                    val currentRouteId = navController.currentBackStackEntry?.destination?.id
-                                    navController.navigate("movieList") {
-                                        popUpTo(currentRouteId?:"") { inclusive = true }
-                                    }
-                                },
-                                icon = { Icon(Icons.Default.Home, contentDescription = "Inicio") },
-                                label = { Text("Inicio") }
-                            )
-                            NavigationBarItem(
-                                selected = false,
-                                onClick = { /* Navegar a ajustes */ },
-                                icon = {
-                                    Icon(
-                                        Icons.AutoMirrored.Filled.ArrowBack,
-                                        contentDescription = "Ajustes"
-                                    )
-                                },
-                                label = { Text("Ajustes") }
-                            )
-                        }
-                    },
                     modifier = Modifier.fillMaxSize(),
                     topBar = {
                         TopBar(

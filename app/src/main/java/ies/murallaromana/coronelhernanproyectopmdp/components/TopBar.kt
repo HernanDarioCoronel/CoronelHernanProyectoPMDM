@@ -39,36 +39,15 @@ fun TopBar(debugGoBackToLogin: () -> Unit, subtitle: String) {
             actionIconContentColor = Color.Transparent,
             subtitleContentColor = MaterialTheme.colorScheme.onPrimary
         ),
-        navigationIcon = {
-            IconButton(
-                onClick = {},
-                modifier = Modifier
-                    .background(
-                        color = MaterialTheme.colorScheme.primary,
-                        shape = CutCornerShape(0.dp)
-                    )
-
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Menu,
-                    contentDescription = "Menú",
-                    modifier = Modifier.size(50.dp)
-                )
-            }
-        },
         actions = {
             IconButton(
                 onClick = { debugGoBackToLogin() },
-                modifier = Modifier
-                    .background(
-                        color = MaterialTheme.colorScheme.primary,
-                        shape = CircleShape
-                    )
             ) {
                 Icon(
                     imageVector = Icons.Filled.Person,
                     contentDescription = "Usuario",
-                    tint = MaterialTheme.colorScheme.onPrimary
+                    tint = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.size(50.dp)
                 )
             }
         },
