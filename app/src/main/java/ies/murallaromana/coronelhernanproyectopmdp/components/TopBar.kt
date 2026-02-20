@@ -1,12 +1,9 @@
 package ies.murallaromana.coronelhernanproyectopmdp.components
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -44,10 +41,10 @@ fun TopBar(debugGoBackToLogin: () -> Unit, subtitle: String) {
                 onClick = { debugGoBackToLogin() },
             ) {
                 Icon(
-                    imageVector = Icons.Filled.Person,
+                    imageVector = Icons.AutoMirrored.Filled.Logout,
                     contentDescription = "Usuario",
                     tint = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier.size(50.dp)
+                    modifier = Modifier.padding(5.dp).size(50.dp)
                 )
             }
         },
