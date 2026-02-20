@@ -6,7 +6,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 
 object InstanciaRetrofit {
-    private const val BASE_URL = "https://moviesrestapi-production.up.railway.app/"
+    private const val BASE_URL = "https://moviesrestapi-production.up.railway.app/api/v1/"
 
     private val json = Json {
         ignoreUnknownKeys = true

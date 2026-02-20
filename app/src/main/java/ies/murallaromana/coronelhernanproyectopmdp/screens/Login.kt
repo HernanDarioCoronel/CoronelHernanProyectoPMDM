@@ -1,6 +1,7 @@
 package ies.murallaromana.coronelhernanproyectopmdp.screens
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -23,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,7 +40,12 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import ies.murallaromana.coronelhernanproyectopmdp.components.LogoHeader
+import ies.murallaromana.coronelhernanproyectopmdp.dataAccess.retrofit.DTO.LoginResponse
+import ies.murallaromana.coronelhernanproyectopmdp.dataAccess.retrofit.InstanciaRetrofit
+import ies.murallaromana.coronelhernanproyectopmdp.entities.User
 import ies.murallaromana.coronelhernanproyectopmdp.sharedPreferences.UserPreferences
+import kotlinx.coroutines.launch
+import org.jetbrains.annotations.Debug
 
 @Composable
 fun Login(
@@ -47,9 +55,11 @@ fun Login(
     context: Context
 ) {
     val prefs = remember { UserPreferences(context) }
+    val scope = rememberCoroutineScope()
 
     var usuario by remember { mutableStateOf(prefs.getUser()) }
-    var passw by remember { mutableStateOf(prefs.getPass()) }
+    var token by remember { mutableStateOf(prefs.getToken()) }
+    var passw by remember { mutableStateOf("") }
 
     val isEmailError = usuario.isNotEmpty() && !isEmailValid(usuario)
     val isPasswordError = passw.isNotEmpty() && !isPasswValid(passw)
@@ -124,8 +134,16 @@ fun Login(
                     Button(
                         onClick = {
                             if (!isEmailError && !isPasswordError && usuario.isNotEmpty() && passw.isNotEmpty()) {
-                                prefs.saveData(usuario, passw)
-                                onNavigateToMovieList()
+                                scope.launch {
+                                    try {
+                                        val response: LoginResponse =
+                                            InstanciaRetrofit.usersApi.login(User(usuario, passw))
+                                        prefs.saveData(usuario, token)
+                                        onNavigateToMovieList()
+                                    } catch (e: Exception) {
+                                        e.printStackTrace()
+                                    }
+                                }
                             }
                         },
                         colors = ButtonDefaults.buttonColors(

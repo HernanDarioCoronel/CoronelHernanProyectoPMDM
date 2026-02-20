@@ -5,14 +5,14 @@ import android.content.Context
 class UserPreferences(context: Context) {
     private val prefs = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
 
-    fun saveData(user: String, pass: String) {
+    fun saveData(user: String, token: String) {
         prefs.edit().apply {
             putString("user_name", user)
-            putString("user_pass", pass)
+            putString("user_token", token)
             apply()
         }
     }
 
     fun getUser(): String = prefs.getString("user_name", "") ?: ""
-    fun getPass(): String = prefs.getString("user_pass", "") ?: ""
+    fun getToken(): String = prefs.getString("user_token", "") ?: ""
 }
