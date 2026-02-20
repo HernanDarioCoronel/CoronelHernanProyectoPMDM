@@ -1,7 +1,6 @@
 package ies.murallaromana.coronelhernanproyectopmdp.screens
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,7 +28,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -37,14 +35,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ies.murallaromana.coronelhernanproyectopmdp.components.MovieItem
-import ies.murallaromana.coronelhernanproyectopmdp.dataAccess.MovieManager
+import ies.murallaromana.coronelhernanproyectopmdp.dataAccess.json.MovieManager
 import ies.murallaromana.coronelhernanproyectopmdp.entities.Movie
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovieList(
-    onNavigateToMovie: (movieId: Int) -> Unit,
-    onNavigateToMovieEdit: (movieId: Int) -> Unit,
+    onNavigateToMovie: (movieId: String) -> Unit,
+    onNavigateToMovieEdit: (movieId: String) -> Unit,
     modifier: Modifier,
     context: Context,
     file: String
@@ -52,11 +50,13 @@ fun MovieList(
     var movies by remember { mutableStateOf(emptyList<Movie>()) }
     var searchText by remember { mutableStateOf("") }
     var filteredMovies by remember { mutableStateOf(emptyList<Movie>()) }
-    var idToDelete by remember { mutableIntStateOf(0) }
+    var idToDelete by remember { mutableStateOf("0") }
     var openDialog by remember { mutableStateOf(false) }
     Column(modifier = modifier) {
         LaunchedEffect(Unit) {
             movies = MovieManager.loadMovies(context, file)
+            //movies = InstanciaRetrofit.moviesApi.getAllMovies()
+            // la api no tiene ni editar ni eliminar. Como la uso si no
             filteredMovies = movies
         }
         if (movies.isEmpty()) {
@@ -128,12 +128,12 @@ fun MovieList(
                             ) {
                                 TextButton(
                                     onClick = {
-                                        if (idToDelete != 0) {
+                                        if (idToDelete != "0") {
                                             MovieManager.deleteMovie(
                                                 id = idToDelete,
                                                 context = context
                                             )
-                                            idToDelete = 0
+                                            idToDelete = "0"
                                             movies = MovieManager.loadMovies(context, file)
                                             filteredMovies = filterMovies(movies, searchText)
                                         }

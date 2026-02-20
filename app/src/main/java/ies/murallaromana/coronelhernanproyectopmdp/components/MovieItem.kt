@@ -40,6 +40,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import ies.murallaromana.coronelhernanproyectopmdp.R
 import ies.murallaromana.coronelhernanproyectopmdp.entities.Movie
 
@@ -48,9 +49,9 @@ import ies.murallaromana.coronelhernanproyectopmdp.entities.Movie
 fun MovieItem(
     movie: Movie,
     context: Context,
-    onNavigateToMovie: (movieId: Int) -> Unit,
-    onNavigateToMovieEdit: (movieId: Int) -> Unit,
-    onOpenDialog: (movieId: Int) -> Unit
+    onNavigateToMovie: (movieId: String) -> Unit,
+    onNavigateToMovieEdit: (movieId: String) -> Unit,
+    onOpenDialog: (movieId: String) -> Unit
 ) {
     Card(
         onClick = { onNavigateToMovie(movie.id) },
@@ -66,14 +67,24 @@ fun MovieItem(
             modifier = Modifier.padding(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_launcher_background),
-                contentDescription = movie.title,
-                modifier = Modifier
-                    .size(80.dp)
-                    .clip(MaterialTheme.shapes.small)
-                    .background(MaterialTheme.colorScheme.primary)
-            )
+            if (/*movie.imageUrl.isEmpty()*/true)
+                Image(
+                    painter = painterResource(id = R.drawable.ic_launcher_background),
+                    contentDescription = movie.title,
+                    modifier = Modifier
+                        .size(80.dp)
+                        .clip(MaterialTheme.shapes.small)
+                        .background(MaterialTheme.colorScheme.primary)
+                )
+            else
+                AsyncImage(
+                    model = "movie.imageUrl",//quitar comillas
+                    contentDescription = movie.title,
+                    modifier = Modifier
+                        .size(80.dp)
+                        .clip(MaterialTheme.shapes.small)
+                        .background(MaterialTheme.colorScheme.primary)
+                )
 
             Spacer(modifier = Modifier.width(16.dp))
 

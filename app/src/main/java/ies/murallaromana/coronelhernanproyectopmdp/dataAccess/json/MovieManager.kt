@@ -1,4 +1,4 @@
-package ies.murallaromana.coronelhernanproyectopmdp.dataAccess
+package ies.murallaromana.coronelhernanproyectopmdp.dataAccess.json
 
 import android.content.Context
 import ies.murallaromana.coronelhernanproyectopmdp.entities.Movie
@@ -8,6 +8,12 @@ import java.io.File
 object MovieManager {
     private const val DEFAULT_FILE = "movies.json"
 
+    private val jsonConfig = Json {
+        ignoreUnknownKeys = true
+        coerceInputValues = true
+        isLenient = true
+    }
+
     fun loadMovies(context: Context, fileName: String = DEFAULT_FILE): List<Movie> {
         val internalFile = File(context.filesDir, fileName)
         return try {
@@ -16,28 +22,33 @@ object MovieManager {
             } else {
                 context.assets.open(fileName).bufferedReader().use { it.readText() }
             }
-            Json.decodeFromString(jsonString)
+            jsonConfig.decodeFromString<List<Movie>>(jsonString)
         } catch (e: Exception) {
+            e.printStackTrace()
             emptyList()
         }
     }
 
     fun saveMovies(context: Context, movies: List<Movie>, fileName: String = DEFAULT_FILE) {
-        val jsonString = Json.encodeToString(movies)
-        File(context.filesDir, fileName).writeText(jsonString)
+        try {
+            val jsonString = jsonConfig.encodeToString(movies)
+            context.openFileOutput(fileName, Context.MODE_PRIVATE).use { output ->
+                output.write(jsonString.toByteArray())
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     fun addMovie(context: Context, movie: Movie, fileName: String = DEFAULT_FILE) {
         val movies = loadMovies(context, fileName).toMutableList()
-        val nextId = (movies.maxOfOrNull { it.id } ?: -1) + 1
-        if (nextId < 1)
-            return
-        val newMovie = movie.copy(id = nextId)
+
+        val nextId = (movies.maxOfOrNull { it.id.toIntOrNull() ?: 0 } ?: 0) + 1
+
+        val newMovie = movie.copy(id = nextId.toString())
+
         movies.add(newMovie)
-        val jsonString = Json.encodeToString(movies)
-        context.openFileOutput(fileName, Context.MODE_PRIVATE).use { output ->
-            output.write(jsonString.toByteArray())
-        }
+        saveMovies(context, movies, fileName)
     }
 
     fun editMovie(context: Context, updatedMovie: Movie, fileName: String = DEFAULT_FILE) {
@@ -47,11 +58,11 @@ object MovieManager {
         saveMovies(context, movies, fileName)
     }
 
-    fun deleteMovie(context: Context, id: Int, fileName: String = DEFAULT_FILE) {
+    fun deleteMovie(context: Context, id: String, fileName: String = DEFAULT_FILE) {
         val movies = loadMovies(context, fileName).filter { it.id != id }
         saveMovies(context, movies, fileName)
     }
 
-    fun getMovieById(context: Context, id: Int, fileName: String = DEFAULT_FILE): Movie? =
+    fun getMovieById(context: Context, id: String, fileName: String = DEFAULT_FILE): Movie? =
         loadMovies(context, fileName).find { it.id == id }
 }

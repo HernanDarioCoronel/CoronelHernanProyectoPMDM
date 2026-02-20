@@ -53,18 +53,16 @@ fun AppNavigation(
                 modifier = modifier,
                 context = context,
                 file = fileName,
-                onNavigateToMovie = { movieId: Int ->
+                onNavigateToMovie = { movieId: String ->
                     navController.navigate("movie/$movieId")
                 },
-                onNavigateToMovieEdit = { movieId: Int ->
+                onNavigateToMovieEdit = { movieId: String ->
                     navController.navigate("movie/edit/$movieId")
                 }
             )
         }
         composable("movie/{movieId}") { backStackEntry ->
-            val movieIdString = backStackEntry.arguments?.getString("movieId")
-
-            val movieId = movieIdString?.toIntOrNull() ?: 0
+            val movieId = backStackEntry.arguments?.getString("movieId")
 
             changeSubtitle("Detalles")
             MovieScreen(
@@ -75,9 +73,7 @@ fun AppNavigation(
             )
         }
         composable("movie/edit/{movieId}") { backStackEntry ->
-            val movieIdString = backStackEntry.arguments?.getString("movieId")
-
-            val movieId = movieIdString?.toIntOrNull() ?: 0
+            val movieId = backStackEntry.arguments?.getString("movieId")
 
             changeSubtitle("Editar")
             MovieScreen(

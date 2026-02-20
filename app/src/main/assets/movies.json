@@ -1,4 +1,5 @@
-[{"id":1,"Title":"Blue Steel","Genre":"Action|Thriller","Sinopsis":"Soft and plush robe for comfort after the shower.","Year":2011},
+[
+{"id":1,"Title":"Blue Steel","Genre":"Action|Thriller","Sinopsis":"Soft and plush robe for comfort after the shower.","Year":2011},
 {"id":2,"Title":"Bloody New Year","Genre":"Horror|Mystery","Sinopsis":"Comfortable pet carrier for travel and vet visits.","Year":2000},
 {"id":3,"Title":"Stratton Story, The","Genre":"Drama|Romance","Sinopsis":"A seasonal creamer that adds pumpkin spice flavor to coffee or tea.","Year":2006},
 {"id":4,"Title":"Alice Upside Down (Alice)","Genre":"Adventure|Children|Comedy|Drama","Sinopsis":"DIY projector that magnifies your smartphone screen for movie nights.","Year":2006},
