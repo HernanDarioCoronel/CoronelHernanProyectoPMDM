@@ -1,3 +1,5 @@
+package ies.murallaromana.coronelhernanproyectopmdp.dataAccess
+
 import android.content.Context
 import ies.murallaromana.coronelhernanproyectopmdp.entities.Movie
 import kotlinx.serialization.json.Json

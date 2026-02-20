@@ -14,6 +14,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import ies.murallaromana.coronelhernanproyectopmdp.R
+import ies.murallaromana.coronelhernanproyectopmdp.dataAccess.MovieManager
 import ies.murallaromana.coronelhernanproyectopmdp.entities.Movie
 
 /**
@@ -22,7 +23,7 @@ import ies.murallaromana.coronelhernanproyectopmdp.entities.Movie
  * @param modifier Modificador para ajustar el diseño desde el componente superior.
  * @param movieId ID de la película a cargar. Si es nulo, la pantalla entra en modo "Crear".
  * @param file Nombre del archivo o recurso donde se gestionan los datos.
- * @param context Contexto de la aplicación necesario para el [MovieManager].
+ * @param context Contexto de la aplicación necesario para el [ies.murallaromana.coronelhernanproyectopmdp.dataAccess.MovieManager].
  * @param isEditing Booleano que determina si los campos son editables (modo edición).
  * @param onGoBack Callback que se ejecuta tras guardar los cambios o crear la película.
  */
